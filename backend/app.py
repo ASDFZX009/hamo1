@@ -5,7 +5,7 @@ from flask_cors import CORS
 from database import supabase
 
 app = Flask(__name__)
-CORS(app, expose_headers=['X-Role'])
+CORS(app, origins='*', expose_headers=['X-Role'])
 
 # ── Role guard decorator ──────────────────────────────────────────────
 def admin_required(f):
@@ -70,7 +70,7 @@ def get_user(user_id):
 def create_user():
     try:
         data = request.json
-        required = ['fullname', 'age', 'address', 'phone_number', 'email', 'shirt_size', 'payment_status', 'distance']
+        required = ['fullname', 'age', 'address', 'phone_number', 'email', 'shirt_size', 'payment_status']
         for field in required:
             if field not in data:
                 return jsonify({'error': f'Missing field: {field}'}), 400
