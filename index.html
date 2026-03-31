@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Management</title>
+  <!-- Compiled Tailwind CSS (run: npm run build:css) -->
+  <link rel="stylesheet" href="./css/output.css" />
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white py-6 shadow-md">
+    <div class="max-w-5xl mx-auto px-4">
+      <h1 class="text-3xl font-bold">User Management</h1>
+      <p class="text-sm text-blue-200 mt-1">Manage registered users, shirt sizes, and payment status</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Add User Form -->
+    <section class="bg-white rounded-2xl shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Add New User</h2>
+      <form id="userForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input id="fullname" type="text" placeholder="Full Name" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        <input id="age" type="number" placeholder="Age" min="1" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        <input id="address" type="text" placeholder="Address" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 md:col-span-2" />
+        <input id="phone_number" type="tel" placeholder="Phone Number" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        <input id="email" type="email" placeholder="Email Address" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        <select id="shirt_size" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <option value="" disabled selected>Select Shirt Size</option>
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
+        <select id="payment_status" required
+          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <option value="" disabled selected>Payment Status</option>
+          <option value="pending">Pending</option>
+          <option value="waiting_verification">Waiting Verification</option>
+          <option value="paid">Paid</option>
+          <option value="failed">Failed</option>
+        </select>
+        <div class="md:col-span-2 flex justify-end">
+          <button type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition duration-200">
+            Add User
+          </button>
+        </div>
+      </form>
+      <p id="formMsg" class="mt-3 text-sm text-green-600 hidden"></p>
+    </section>
+
+    <!-- Users Table -->
+    <section class="bg-white rounded-2xl shadow-md p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">Registered Users</h2>
+        <button onclick="fetchUsers()" class="text-sm text-blue-600 hover:underline">↻ Refresh</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-700 border-separate border-spacing-y-1">
+          <thead class="text-xs uppercase bg-gray-100 text-gray-500">
+            <tr>
+              <th class="px-4 py-2 rounded-l-lg">Full Name</th>
+              <th class="px-4 py-2">Age</th>
+              <th class="px-4 py-2">Email</th>
+              <th class="px-4 py-2">Phone</th>
+              <th class="px-4 py-2">Shirt</th>
+              <th class="px-4 py-2 rounded-r-lg">Payment</th>
+            </tr>
+          </thead>
+          <tbody id="usersTable">
+            <tr>
+              <td colspan="6" class="text-center text-gray-400 py-6">Loading users...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Supabase JS for auth guard -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    // ── Auth guard — credentials loaded from backend .env ────────────
+    const BACKEND = 'https://hamo1.onrender.com';
+    let _supabase = null;
+
+    (async () => {
+      try {
+        const res = await fetch(`${BACKEND}/api/config`);
+        const config = await res.json();
+        _supabase = window.supabase.createClient(config.supabaseUrl, config.supabaseKey);
+      } catch {
+        window.location.replace('./login.html');
+        return;
+      }
+
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) {
+        window.location.replace('./login.html');
+        return;
+      }
+
+      // Inject user avatar + sign-out into header
+      const user = session.user;
+      const header = document.querySelector('header .max-w-5xl');
+      if (header) {
+        const bar = document.createElement('div');
+        bar.style.cssText = 'display:flex;align-items:center;gap:12px;margin-top:10px;';
+        bar.innerHTML = `
+          <img src="${user.user_metadata?.avatar_url || ''}" alt="avatar"
+               style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);"
+               onerror="this.style.display='none'" />
+          <span style="font-size:14px;opacity:0.85;">${user.user_metadata?.full_name || user.email}</span>
+          <button id="signOutBtn"
+            style="margin-left:auto;background:rgba(255,255,255,0.15);border:none;color:white;
+                   padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;">
+            Sign Out
+          </button>`;
+        header.appendChild(bar);
+        document.getElementById('signOutBtn').onclick = async () => {
+          await _supabase.auth.signOut();
+          window.location.replace('./login.html');
+        };
+      }
+    })();
+  </script>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+
+    const statusColors = {
+      paid: 'bg-green-100 text-green-700',
+      pending: 'bg-yellow-100 text-yellow-700',
+      waiting_verification: 'bg-yellow-200 text-yellow-800',
+      failed: 'bg-red-100 text-red-700',
+    };
+
+    async function fetchUsers() {
+      const tbody = document.getElementById('usersTable');
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-6">Loading...</td></tr>';
+      try {
+        const res = await fetch(`${API_BASE}/users`);
+        const users = await res.json();
+        if (!users.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-6">No users found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = users.map(u => {
+          const statusLabel = u.payment_status === 'paid' ? 'Paid' :
+            u.payment_status === 'waiting_verification' ? 'Waiting' :
+              u.payment_status === 'pending' ? 'Pending' : 'Failed';
+          return `
+          <tr class="bg-gray-50 hover:bg-blue-50 transition rounded-lg">
+            <td class="px-4 py-2 font-medium rounded-l-lg">${u.fullname}</td>
+            <td class="px-4 py-2">${u.age}</td>
+            <td class="px-4 py-2">${u.email}</td>
+            <td class="px-4 py-2">${u.phone_number}</td>
+            <td class="px-4 py-2">${u.shirt_size}</td>
+            <td class="px-4 py-2 rounded-r-lg">
+              <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColors[u.payment_status] || 'bg-gray-100 text-gray-600'}">
+                ${statusLabel}
+              </span>
+            </td>
+          </tr>
+        `}).join('');
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-400 py-6">Failed to load users. Is the backend running?</td></tr>';
+      }
+    }
+
+    document.getElementById('userForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('formMsg');
+      const payload = {
+        fullname: document.getElementById('fullname').value,
+        age: parseInt(document.getElementById('age').value),
+        address: document.getElementById('address').value,
+        phone_number: document.getElementById('phone_number').value,
+        email: document.getElementById('email').value,
+        shirt_size: document.getElementById('shirt_size').value,
+        payment_status: document.getElementById('payment_status').value,
+      };
+      try {
+        const res = await fetch(`${API_BASE}/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          msg.textContent = '✓ User added successfully!';
+          msg.className = 'mt-3 text-sm text-green-600';
+          msg.classList.remove('hidden');
+          e.target.reset();
+          fetchUsers();
+        } else {
+          const err = await res.json();
+          msg.textContent = `Error: ${err.error}`;
+          msg.className = 'mt-3 text-sm text-red-500';
+          msg.classList.remove('hidden');
+        }
+      } catch {
+        msg.textContent = 'Error: Could not reach the backend server.';
+        msg.className = 'mt-3 text-sm text-red-500';
+        msg.classList.remove('hidden');
+      }
+    });
+
+    fetchUsers();
+  </script>
+</body>
+
+</html>
