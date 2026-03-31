@@ -1,0 +1,12 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Frontend using TailwindCSS",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./css/output.css",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./css/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

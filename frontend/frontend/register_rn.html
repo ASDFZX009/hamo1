@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RN — สมัครวิ่ง</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #181818;
+      --card: #1f1f1f;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.55);
+      --blue: #42a5f5;
+      --blue2: #1565c0;
+      --green: #69f0ae;
+      --green2: #00c853;
+      --pink: #e040fb;
+    }
+
+    html,
+    body {
+      min-height: 100vh;
+      font-family: 'Kanit', 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── BG orbs ── */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(130px);
+      opacity: 0.10;
+      animation: drift 16s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 550px;
+      height: 550px;
+      background: #42a5f5;
+      top: -180px;
+      left: -180px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 450px;
+      height: 450px;
+      background: #69f0ae;
+      bottom: -120px;
+      right: -120px;
+      animation-delay: -6s;
+    }
+
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      background: #e040fb;
+      top: 50%;
+      left: 55%;
+      animation-delay: -11s;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate(0, 0) scale(1);
+      }
+
+      to {
+        transform: translate(40px, 30px) scale(1.08);
+      }
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(13, 13, 13, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      border-radius: 10px;
+      padding: 5px 14px;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 16px rgba(66, 165, 245, 0.35);
+    }
+
+    .back-btn {
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 7px 16px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-wrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid var(--blue);
+      overflow: hidden;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue);
+      box-shadow: 0 0 10px rgba(66, 165, 245, 0.35);
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 7px 16px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    /* ── Main layout ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media(max-width:780px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 24px 16px 60px;
+      }
+    }
+
+    /* ── Left: Event info ── */
+    .event-info {
+      padding-right: 8px;
+    }
+
+    .event-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(66, 165, 245, 0.12);
+      border: 1px solid rgba(66, 165, 245, 0.3);
+      border-radius: 999px;
+      padding: 4px 14px;
+      margin-bottom: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .event-tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 8px var(--blue);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.8);
+      }
+    }
+
+    .event-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #fff 40%, var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .event-subtitle {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--blue);
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    .event-desc {
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.85;
+      margin-bottom: 28px;
+    }
+
+    .info-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .info-block-content {}
+
+    .info-block-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 3px;
+      letter-spacing: 0.3px;
+    }
+
+    .info-block-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.6;
+    }
+
+    /* ── Right: Ticket selector ── */
+    .ticket-panel {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 28px 24px 24px;
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 24px;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .ticket-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .ticket-option {
+      background: var(--card);
+      border: 2px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ticket-option::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--blue);
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .ticket-option:hover {
+      border-color: rgba(66, 165, 245, 0.4);
+      background: #252525;
+    }
+
+    .ticket-option.selected {
+      border-color: var(--blue);
+      background: rgba(66, 165, 245, 0.08);
+      box-shadow: 0 0 20px rgba(66, 165, 245, 0.15);
+    }
+
+    .ticket-option.selected::before {
+      opacity: 1;
+    }
+
+    .ticket-left {}
+
+    .ticket-dist {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 2px;
+    }
+
+    .ticket-type {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .ticket-price {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -0.5px;
+    }
+
+    .ticket-price span {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 2px;
+    }
+
+    .radio-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.2s;
+      margin-left: 12px;
+    }
+
+    .radio-dot::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .ticket-option.selected .radio-dot {
+      border-color: var(--blue);
+    }
+
+    .ticket-option.selected .radio-dot::after {
+      opacity: 1;
+    }
+
+    /* ── Summary ── */
+    .summary-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .summary-row+.summary-row {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .summary-row .label {
+      color: var(--muted);
+    }
+
+    .summary-row .value {
+      font-weight: 600;
+    }
+
+    .summary-row.total .value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    /* ── Register button ── */
+    .btn-register {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--green2), var(--green));
+      font-family: 'Kanit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0d0d0d;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 24px rgba(105, 240, 174, 0.25);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-register:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(105, 240, 174, 0.35);
+    }
+
+    .btn-register:active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .btn-register:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    /* ── Auth overlay ── */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.4s;
+    }
+
+    .auth-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border: 3px solid rgba(255, 255, 255, 0.08);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      box-shadow: 0 0 16px rgba(66, 165, 245, 0.3);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── Modal Base ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Register Modal */
+    .modal {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px 28px;
+      max-width: 480px;
+      width: 100%;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-overlay.show .modal {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .modal-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 5px;
+      display: block;
+      letter-spacing: 0.3px;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      background: #252525;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 11px;
+      padding: 11px 13px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      color: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.12);
+    }
+
+    .form-select option {
+      background: #252525;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--green2), var(--green));
+      font-family: 'Kanit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0d0d0d;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(105, 240, 174, 0.2);
+    }
+
+    .btn-submit:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-cancel {
+      width: 100%;
+      padding: 11px;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 13px;
+      background: transparent;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    /* ── Payment Modal ── */
+    .pay-modal {
+      background: #111;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      max-width: 760px;
+      width: 100%;
+      transform: translateY(20px);
+      transition: transform 0.28s;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .modal-overlay.show .pay-modal {
+      transform: translateY(0);
+    }
+
+    @media(max-width:640px) {
+      .pay-modal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pay-left {
+      padding: 28px 24px;
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pay-panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .pay-profile {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .pay-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--blue);
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--blue);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .pay-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pay-ticket-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .pay-ticket-price {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: -0.5px;
+    }
+
+    .pay-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.07);
+      margin: 14px 0;
+    }
+
+    .pay-items-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .pay-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .pay-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .pay-item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+      box-shadow: 0 0 6px var(--blue);
+    }
+
+    .btn-pay {
+      margin-top: auto;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--green2), var(--green));
+      font-family: 'Kanit', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0d0d0d;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(105, 240, 174, 0.25);
+    }
+
+    .btn-pay:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(105, 240, 174, 0.35);
+    }
+
+    .btn-pay:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .pay-right {
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pay-method-card {
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .pay-method-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .pay-method-card.selected {
+      border-color: var(--blue);
+      box-shadow: 0 0 16px rgba(66, 165, 245, 0.2);
+    }
+
+    .visa-card {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .visa-logo {
+      font-size: 30px;
+      font-weight: 900;
+      font-style: italic;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .mc-wrap {
+      display: flex;
+    }
+
+    .mc-red {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #eb001b;
+    }
+
+    .mc-orange {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #f79e1b;
+      margin-left: -10px;
+      opacity: 0.95;
+    }
+
+    .qr-card {
+      background: linear-gradient(135deg, #002D62, #003580);
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .qr-icon {
+      font-size: 26px;
+    }
+
+    .qr-logo {
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .pay-method-label {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .slip-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .slip-name-box {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 9px 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .slip-name-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .slip-name-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slip-name-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .slip-upload-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1.5px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 9px 14px;
+      white-space: nowrap;
+      font-family: 'Kanit', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .slip-upload-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: rgba(66, 165, 245, 0.06);
+    }
+
+    .slip-upload-btn.has-file {
+      border-style: solid;
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(105, 240, 174, 0.06);
+    }
+
+    .slip-preview {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      display: none;
+    }
+
+    .slip-preview img {
+      width: 100%;
+      display: block;
+      max-height: 110px;
+      object-fit: cover;
+    }
+
+    .btn-back-pay {
+      background: transparent;
+      border: none;
+      font-family: 'Kanit', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0;
+      text-align: center;
+      width: 100%;
+      transition: color 0.2s;
+    }
+
+    .btn-back-pay:hover {
+      color: #fff;
+    }
+
+    /* ── QR Display ── */
+    .qr-display-box {
+      background: linear-gradient(135deg, #002D62, #003a80);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid rgba(66, 165, 245, 0.3);
+    }
+
+    .qr-display-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .qr-promptpay-label {
+      background: #fff;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #003a80;
+      letter-spacing: 0.3px;
+    }
+
+    .qr-code-img {
+      display: block;
+      width: 100%;
+      max-height: 170px;
+      object-fit: contain;
+      background: #fff;
+      padding: 8px;
+    }
+
+    .qr-amount-display {
+      padding: 8px 14px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.3px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ── Card Form ── */
+    .card-form {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-form.show {
+      display: flex;
+    }
+
+    .card-logos {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .card-logo-item {
+      height: 22px;
+      border-radius: 4px;
+      background: #fff;
+      padding: 2px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .card-logo-item.visa {
+      color: #1a1f71;
+    }
+
+    .card-logo-item.mc {
+      background: transparent;
+      padding: 0;
+    }
+
+    .card-logo-item.jcb {
+      color: #003087;
+      background: #e8f0ff;
+    }
+
+    .card-logo-item.thai {
+      color: #003087;
+      background: #e8f4ff;
+      font-size: 9px;
+    }
+
+    .card-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-field-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card-field-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 2px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .card-field-input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 13px;
+    }
+
+    .card-field-input:focus {
+      border-color: var(--blue);
+    }
+
+    .card-field-input.error {
+      border-color: var(--red);
+    }
+
+    .card-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .card-security-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .card-remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .card-remember input {
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+
+    .card-pay-btn {
+      background: linear-gradient(135deg, #1565c0, #42a5f5);
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      width: 100%;
+      font-family: 'Kanit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 4px;
+      box-shadow: 0 4px 18px rgba(66, 165, 245, 0.25);
+    }
+
+    .card-pay-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .card-pay-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="auth-overlay" id="authOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="bg-mesh">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="back-btn" onclick="window.location.href='./dashboard.html'">← กลับ</button>
+      <div class="brand">
+        <div class="brand-badge">RN</div>
+        Run Normal
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="avatar-wrap" id="avatarEl">?</div>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <!-- Left: Event Info -->
+    <div class="event-info">
+      <div class="event-tag"><span class="dot"></span>เปิดรับสมัคร</div>
+      <h1 class="event-title">Run to Nan</h1>
+      <div class="event-subtitle">วิ่งสู่น่าน วิ่งสู่วิถีล้านนา</div>
+      <p class="event-desc">
+        🏃 มาร่วมเปิดประสบการณ์ใหม่กับงานวิ่งสุดพิเศษ ท่ามกลางขุนเขา สายหมอก และวัฒนธรรมอันงดงามของ จังหวัดน่าน
+        เมืองเล็กๆ ที่เดิมไปด้วยเสน่ห์แบบเรียบง่ายแต่ทรงพลัง
+      </p>
+
+      <div class="info-blocks">
+        <div class="info-block">
+          <div class="info-icon">📅</div>
+          <div class="info-block-content">
+            <div class="info-block-title">วันและเวลา</div>
+            <div class="info-block-text">วันเสาร์ที่ 18 – วันอาทิตย์ที่ 19 ตุลาคม 2569</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-icon">🏛️</div>
+          <div class="info-block-content">
+            <div class="info-block-title">สถานที่</div>
+            <div class="info-block-text">ณ วัดภูมินทร์ — แลนด์มาร์กกลางเมืองน่าน
+              จุดเริ่มต้นของการเดินทางด้วยสองเท้าของคุณ</div>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-icon">💧</div>
+          <div class="info-block-content">
+            <div class="info-block-title">การดูแลตลอดเส้นทาง</div>
+            <div class="info-block-text">ตลอดเส้นทางมีจุดบริการน้ำดื่ม จุดดูแลความปลอดภัย
+              และหน่วยปฐมพยาบาลตามมาตรฐานสากล เพื่อให้คุณวิ่งได้อย่างมั่นใจ สนุก และปลอดภัยในทุกช่วงกิโลเมตร</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Ticket Panel -->
+    <div class="ticket-panel">
+      <div class="panel-title">เลือกระยะทาง</div>
+
+      <div class="ticket-options">
+        <div class="ticket-option selected" onclick="selectTicket(this, '5KM', 219)">
+          <div class="ticket-left">
+            <div class="ticket-dist">Regular Fun Run — 5KM</div>
+            <div class="ticket-type">เหมาะสำหรับผู้เริ่มต้น</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="ticket-price">219 <span>THB</span></div>
+            <div class="radio-dot"></div>
+          </div>
+        </div>
+
+        <div class="ticket-option" onclick="selectTicket(this, '10KM', 319)">
+          <div class="ticket-left">
+            <div class="ticket-dist">Regular Fun Run — 10KM</div>
+            <div class="ticket-type">สำหรับนักวิ่งทั่วไป</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="ticket-price">319 <span>THB</span></div>
+            <div class="radio-dot"></div>
+          </div>
+        </div>
+
+        <div class="ticket-option" onclick="selectTicket(this, '15KM', 419)">
+          <div class="ticket-left">
+            <div class="ticket-dist">Regular Fun Run — 15KM</div>
+            <div class="ticket-type">ท้าทายสำหรับมือโปร</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="ticket-price">419 <span>THB</span></div>
+            <div class="radio-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-box">
+        <div class="summary-row">
+          <span class="label">Package</span>
+          <span class="value">RN — Run Normal</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">ระยะทาง</span>
+          <span class="value" id="summaryDist">5KM</span>
+        </div>
+        <div class="summary-row total">
+          <span class="label">ราคารวม</span>
+          <span class="value" id="summaryPrice">219 THB</span>
+        </div>
+      </div>
+
+      <button class="btn-register" id="registerBtn" onclick="openModal()">สมัคร</button>
+      <div class="disclaimer">กดสมัครเพื่อกรอกข้อมูลผู้สมัคร<br />ราคาดังกล่าวยังไม่รวม VAT</div>
+    </div>
+  </main>
+
+  <!-- Step 1: Registration Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-title">📝 กรอกข้อมูลผู้สมัคร</div>
+      <div class="modal-sub" id="modalSub">RN — Run Normal · 5KM · 219 THB</div>
+
+      <div class="form-group">
+        <label class="form-label">ชื่อ-นามสกุล</label>
+        <input class="form-input" id="fName" type="text" placeholder="กรอกชื่อ-นามสกุล" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">อายุ</label>
+          <input class="form-input" id="fAge" type="number" min="1" max="99" placeholder="อายุ" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">ขนาดเสื้อ</label>
+          <select class="form-select" id="fShirt">
+            <option value="">เลือกไซส์</option>
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+            <option>2XL</option>
+            <option>3XL</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">เบอร์โทรศัพท์</label>
+        <input class="form-input" id="fPhone" type="tel" placeholder="0xx-xxx-xxxx" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">ที่อยู่</label>
+        <input class="form-input" id="fAddress" type="text" placeholder="ที่อยู่สำหรับจัดส่งเสื้อ" />
+      </div>
+
+      <button class="btn-submit" onclick="goToPayment()">ถัดไป — ยืนยันการสมัคร →</button>
+      <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Payment Confirmation Modal -->
+  <div class="modal-overlay" id="payModalOverlay">
+    <div class="pay-modal">
+      <!-- Left: Summary -->
+      <div class="pay-left">
+        <div class="pay-panel-title">ยืนยันการชำระเงิน</div>
+        <div class="pay-profile">
+          <div class="pay-avatar" id="payAvatar">?</div>
+          <div>
+            <div class="pay-ticket-name" id="payTicketName">Regular Fun Run — 5KM</div>
+            <div class="pay-ticket-price" id="payTicketPrice">THB 219.00</div>
+          </div>
+        </div>
+        <div class="pay-divider"></div>
+        <div class="pay-items-title">รายการที่ได้รับ</div>
+        <ul class="pay-items" id="payItems"></ul>
+        <button class="btn-pay" id="btnPay" onclick="submitRegister()">ชำระเงิน</button>
+        <button class="btn-back-pay" onclick="backToRegister()">← กลับแก้ไขข้อมูล</button>
+      </div>
+      <!-- Right: Payment method + slip -->
+      <div class="pay-right">
+        <div class="pay-panel-title">กรุณาเลือกช่องทางการชำระเงิน</div>
+
+        <div id="methodSection">
+          <div class="pay-method-card" id="payVisa" onclick="selectPayMethod('visa')">
+            <div class="visa-card">
+              <span class="visa-logo">VISA</span>
+              <div class="mc-wrap">
+                <div class="mc-red"></div>
+                <div class="mc-orange"></div>
+              </div>
+            </div>
+            <div class="pay-method-label">เครดิต / เดบิต</div>
+          </div>
+          <div class="pay-method-card selected" id="payQR" onclick="selectPayMethod('qr')">
+            <div class="qr-card">
+              <span class="qr-icon">📱</span>
+              <div class="qr-logo">THAI QR<br />PAYMENT</div>
+            </div>
+            <div class="pay-method-label">พร้อมเพย์</div>
+          </div>
+        </div>
+
+        <div id="qrSection" style="display:block;">
+          <div class="qr-display-box">
+            <div class="qr-display-header">
+              <span style="font-size:14px;">📱</span>
+              <span>THAI QR PAYMENT</span>
+            </div>
+            <div class="qr-promptpay-label">PromptPay</div>
+            <img id="qrCodeImg" src="" alt="QR Code" class="qr-code-img" />
+            <div class="qr-amount-display" id="qrAmountDisplay">THB 219.00</div>
+          </div>
+        </div>
+
+        <!-- VISA Card Form -->
+        <div class="card-form" id="cardForm">
+          <div class="card-logos">
+            <div class="card-logo-item visa">VISA</div>
+            <div class="card-logo-item mc">
+              <svg width="34" height="22" viewBox="0 0 34 22">
+                <rect width="34" height="22" rx="3" fill="#252525" />
+                <circle cx="13" cy="11" r="7" fill="#eb001b" opacity="0.9" />
+                <circle cx="21" cy="11" r="7" fill="#f79e1b" opacity="0.9" />
+                <path d="M17 5.9a7 7 0 0 1 0 10.2A7 7 0 0 1 17 5.9z" fill="#ff5f00" />
+              </svg>
+            </div>
+            <div class="card-logo-item jcb">JCB</div>
+            <div class="card-logo-item thai">🇹🇭Thai</div>
+          </div>
+
+          <div class="card-field-group">
+            <div class="card-field-label">Name on Card</div>
+            <input class="card-field-input" id="cardName" type="text" placeholder="Card holder name"
+              autocomplete="cc-name" />
+          </div>
+
+          <div class="card-field-group">
+            <div class="card-field-label">Card Number</div>
+            <input class="card-field-input" id="cardNumber" type="text" placeholder="•••• •••• •••• ••••" maxlength="19"
+              oninput="formatCardNumber(this)" autocomplete="cc-number" />
+          </div>
+
+          <div class="card-field-row">
+            <div class="card-field-group">
+              <div class="card-field-label">Expiry Date</div>
+              <input class="card-field-input" id="cardExpiry" type="text" placeholder="MM / YY" maxlength="7"
+                oninput="formatExpiry(this)" autocomplete="cc-exp" />
+            </div>
+            <div class="card-field-group">
+              <div class="card-field-label" style="display:flex;align-items:center;gap:6px;">
+                Security Code
+                <span
+                  style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.15);display:inline-flex;align-items:center;justify-content:center;font-size:9px;cursor:help;"
+                  title="3 หรือ 4 หลักหลังบัตร">?</span>
+              </div>
+              <input class="card-field-input" id="cardCvv" type="password" placeholder="•••" maxlength="4"
+                oninput="this.value=this.value.replace(/\D/g,'')" autocomplete="cc-csc" />
+            </div>
+          </div>
+
+          <label class="card-remember">
+            <input type="checkbox" id="cardRemember" /> Remember card
+          </label>
+
+          <button class="card-pay-btn" id="cardPayBtn" onclick="submitWithCard()">
+            ชำระเงิน
+          </button>
+        </div>
+
+        <!-- QR slip section (shown when QR) -->
+        <div id="slipSection" style="display:none;">
+          <div class="slip-row">
+            <div class="slip-name-box">
+              <div class="slip-name-avatar" id="slipAvatar">?</div>
+              <span class="slip-name-text" id="slipName">Name applied</span>
+            </div>
+            <label class="slip-upload-btn" id="slipBtn" for="slipInput">
+              <span>📎</span><span id="slipBtnText">.jpg</span>
+            </label>
+            <input type="file" id="slipInput" accept="image/*" style="display:none" onchange="handleSlip(this)" />
+          </div>
+          <div class="slip-preview" id="slipPreview">
+            <img id="slipImg" src="" alt="slip" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const BACKEND = 'https://hamo1.onrender.com';
+    let _supabase = null;
+    let selectedDist = '5KM';
+    let selectedPrice = 219;
+
+    // ── Auth ──────────────────────────────────────────────────────────
+    (async () => {
+      try {
+        const res = await fetch(`${BACKEND}/api/config`);
+        const config = await res.json();
+        _supabase = window.supabase.createClient(config.supabaseUrl, config.supabaseKey);
+      } catch {
+        window.location.replace('./login.html');
+        return;
+      }
+
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) { window.location.replace('./login.html'); return; }
+
+      const user = session.user;
+      const displayName = user.user_metadata?.full_name || user.email || '';
+      const avatarEl = document.getElementById('avatarEl');
+      const avatarUrl = user.user_metadata?.avatar_url;
+      if (avatarUrl) {
+        avatarEl.innerHTML = `<img src="${avatarUrl}" alt="avatar" />`;
+      } else {
+        avatarEl.textContent = (displayName[0] || '?').toUpperCase();
+      }
+
+      // Pre-fill name & email from Google
+      document.getElementById('fName').value = displayName;
+
+      document.getElementById('logoutBtn').onclick = async () => {
+        await _supabase.auth.signOut();
+        window.location.replace('./login.html');
+      };
+
+      document.getElementById('authOverlay').classList.add('hidden');
+      setTimeout(() => document.getElementById('authOverlay').remove(), 400);
+    })();
+
+    // ── Ticket selection ──────────────────────────────────────────────
+    function selectTicket(el, dist, price) {
+      document.querySelectorAll('.ticket-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDist = dist;
+      selectedPrice = price;
+      document.getElementById('summaryDist').textContent = dist;
+      document.getElementById('summaryPrice').textContent = price + ' THB';
+    }
+
+    // ── Items per distance ───────────────────────────────────────────
+    const ITEMS = {
+      '5KM': ['เสื้อ 1 ตัว', 'ข้าว 1 กล่อง', 'น้ำ 1 ขวด', 'ป้ายหมายเลขนักวิ่ง 1'],
+      '10KM': ['เสื้อ 1 ตัว', 'ข้าว 1 กล่อง', 'น้ำ 1 ขวด', 'ป้ายหมายเลขนักวิ่ง 1', 'หมวก 1 ใบ'],
+      '15KM': ['เสื้อ 1 ตัว', 'ข้าว 1 กล่อง', 'น้ำ 1 ขวด', 'ป้ายหมายเลขนักวิ่ง 1', 'หมวก 1 ใบ', 'แก้วน้ำ 1 ใบ'],
+    };
+
+    let selectedPayMethod = 'qr';
+    let slipAttached = false;
+
+    // ── Modal Step 1 ─────────────────────────────────────────────────
+    function openModal() {
+      document.getElementById('modalSub').textContent = `RN — Run Normal · ${selectedDist} · ${selectedPrice} THB`;
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('show');
+    }
+
+    // ── Go to Payment (Step 2) ───────────────────────────────────────
+    function goToPayment() {
+      const name = document.getElementById('fName').value.trim();
+      const age = document.getElementById('fAge').value.trim();
+      const shirt = document.getElementById('fShirt').value;
+      const phone = document.getElementById('fPhone').value.trim();
+      const address = document.getElementById('fAddress').value.trim();
+      if (!name || !age || !shirt || !phone || !address) {
+        alert('กรุณากรอกข้อมูลให้ครบถ้วน'); return;
+      }
+      // ── Validate age ──────────────────────────────────────────────
+      const ageNum = parseInt(age);
+      if (isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
+        alert('กรุณากรอกอายุที่ถูกต้อง (1–120 ปี)'); return;
+      }
+      // ── Validate phone (10 digits, starts with 0) ─────────────────
+      if (!/^0\d{9}$/.test(phone)) {
+        alert('กรุณากรอกเบอร์โทรให้ถูกต้อง (ตัวเลข 10 หลัก เริ่มด้วย 0 เช่น 0812345678)'); return;
+      }
+
+      // Fill payment modal
+      document.getElementById('payTicketName').textContent = `Regular Fun Run — ${selectedDist}`;
+      document.getElementById('payTicketPrice').textContent = `THB ${selectedPrice}.00`;
+      document.getElementById('slipName').textContent = name;
+      document.getElementById('qrAmountDisplay').textContent = `THB ${selectedPrice}.00`;
+
+      // Avatar
+      const avatarEl = document.getElementById('avatarEl');
+      document.getElementById('payAvatar').innerHTML = avatarEl.innerHTML || avatarEl.textContent;
+      document.getElementById('slipAvatar').innerHTML = avatarEl.innerHTML || avatarEl.textContent;
+
+      // Items
+      const items = ITEMS[selectedDist] || [];
+      document.getElementById('payItems').innerHTML = items.map(i =>
+        `<li class="pay-item"><span class="pay-item-dot"></span>${i}</li>`
+      ).join('');
+
+      // Generate QR code for PromptPay
+      generateQR(selectedPrice);
+
+      // Default: QR selected
+      document.getElementById('cardForm').classList.remove('show');
+      document.getElementById('qrSection').style.display = 'block';
+      document.getElementById('slipSection').style.display = 'block';
+      document.getElementById('btnPay').style.display = 'block';
+      updatePayBtn();
+
+      closeModal();
+      document.getElementById('payModalOverlay').classList.add('show');
+    }
+
+    function backToRegister() {
+      document.getElementById('payModalOverlay').classList.remove('show');
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+
+    // ── QR Code generation ────────────────────────────────────────────
+    function generateQR(amount) {
+      // PromptPay phone number (placeholder — replace with real number)
+      const phone = '0812345678';
+      const amountStr = amount.toFixed(2);
+      // Use QR API
+      const qrData = `https://promptpay.io/${phone}/${amountStr}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}&bgcolor=ffffff&color=000000&margin=2`;
+      document.getElementById('qrCodeImg').src = qrUrl;
+    }
+
+    // ── Payment method ────────────────────────────────────────────────
+    function selectPayMethod(method) {
+      selectedPayMethod = method;
+      document.getElementById('payVisa').classList.toggle('selected', method === 'visa');
+      document.getElementById('payQR').classList.toggle('selected', method === 'qr');
+      // Show/hide sections
+      document.getElementById('qrSection').style.display = method === 'qr' ? 'block' : 'none';
+      document.getElementById('slipSection').style.display = method === 'qr' ? 'block' : 'none';
+      document.getElementById('cardForm').classList.toggle('show', method === 'visa');
+      // Hide left pay button when visa (card form has own button)
+      document.getElementById('btnPay').style.display = method === 'visa' ? 'none' : 'block';
+      updatePayBtn();
+    }
+
+    // ── Slip upload ───────────────────────────────────────────────────
+    function handleSlip(input) {
+      const file = input.files[0];
+      if (!file) return;
+      slipAttached = true;
+      const btnText = document.getElementById('slipBtnText');
+      btnText.textContent = file.name.length > 10 ? file.name.slice(0, 10) + '…' : file.name;
+      document.getElementById('slipBtn').classList.add('has-file');
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('slipImg').src = e.target.result;
+        document.getElementById('slipPreview').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+      updatePayBtn();
+    }
+
+    // ── Enable/disable pay button ─────────────────────────────────────
+    function updatePayBtn() {
+      const btn = document.getElementById('btnPay');
+      if (selectedPayMethod === 'qr') {
+        btn.disabled = !slipAttached;
+        btn.style.opacity = slipAttached ? '1' : '0.45';
+        btn.title = !slipAttached ? 'กรุณาแนบสลิปก่อนชำระเงิน' : '';
+      }
+    }
+
+    // ── Upload slip to Supabase Storage ───────────────────────────
+    async function uploadSlip(file) {
+      const { data: { session } } = await _supabase.auth.getSession();
+      const email = session?.user?.email || 'anonymous';
+      const timestamp = Date.now();
+      const fileName = `slips/${email}_${timestamp}_${file.name}`;
+      const { data, error } = await _supabase.storage
+        .from('slips')
+        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+      if (error) throw new Error('อัปโหลดสลิปไม่สำเร็จ: ' + error.message);
+
+      const { data: urlData } = _supabase.storage
+        .from('slips')
+        .getPublicUrl(data.key);
+      return urlData.publicUrl;
+    }
+
+    // ── Shared save function ─────────────────────────────────────────
+    async function saveRegistration(btnEl) {
+      const name = document.getElementById('fName').value.trim();
+      const age = document.getElementById('fAge').value.trim();
+      const shirt = document.getElementById('fShirt').value;
+      const phone = document.getElementById('fPhone').value.trim();
+      const address = document.getElementById('fAddress').value.trim();
+
+      const { data: { session } } = await _supabase.auth.getSession();
+      const email = session?.user?.email || '';
+
+      const origText = btnEl.textContent;
+      btnEl.disabled = true;
+      btnEl.textContent = 'กำลังบันทึก...';
+
+      try {
+        // Upload slip first if attached
+        let slipUrl = null;
+        if (slipAttached) {
+          const slipInput = document.getElementById('slipInput');
+          if (slipInput.files[0]) {
+            btnEl.textContent = 'กำลังอัปโหลดสลิป...';
+            slipUrl = await uploadSlip(slipInput.files[0]);
+          }
+        }
+
+        const res = await fetch(`${BACKEND}/api/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullname: name,
+            age: parseInt(age),
+            address: address,
+            phone_number: phone,
+            email: email,
+            shirt_size: shirt,
+            payment_status: 'waiting_verification',
+            slip_url: slipUrl,
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Server error');
+        }
+
+        document.getElementById('payModalOverlay').classList.remove('show');
+        alert('✅ ส่งสลิปเรียบร้อยแล้ว! กรุณารอให้ Admin ยืนยันการชำระเงิน คุณจะได้รับการแจ้งเตือนเมื่อยืนยันแล้ว 🏃');
+        window.location.href = './dashboard.html';
+      } catch (err) {
+        alert('❌ เกิดข้อผิดพลาด: ' + err.message);
+        btnEl.disabled = false;
+        btnEl.textContent = origText;
+        updatePayBtn();
+      }
+    }
+
+    // ── Submit via QR/slip ────────────────────────────────────────────
+    async function submitRegister() {
+      if (selectedPayMethod === 'qr' && !slipAttached) {
+        alert('กรุณาแนบสลิปการโอนก่อนกดชำระเงิน'); return;
+      }
+      await saveRegistration(document.getElementById('btnPay'));
+    }
+
+    // ── Submit via Card ───────────────────────────────────────────────
+    async function submitWithCard() {
+      const cardName = document.getElementById('cardName').value.trim();
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const cardExpiry = document.getElementById('cardExpiry').value.trim();
+      const cardCvv = document.getElementById('cardCvv').value.trim();
+
+      // Validate
+      let valid = true;
+      const fields = [
+        { id: 'cardName', val: cardName, check: v => v.length >= 2 },
+        { id: 'cardNumber', val: cardNumber, check: v => v.length >= 13 && v.length <= 19 },
+        { id: 'cardExpiry', val: cardExpiry, check: v => /^\d{2}\s*\/\s*\d{2}$/.test(v) },
+        { id: 'cardCvv', val: cardCvv, check: v => v.length >= 3 },
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!f.check(f.val)) {
+          el.classList.add('error');
+          valid = false;
+        } else {
+          el.classList.remove('error');
+        }
+      });
+      if (!valid) { alert('กรุณากรอกข้อมูลบัตรให้ครบถ้วนและถูกต้อง'); return; }
+
+      await saveRegistration(document.getElementById('cardPayBtn'));
+    }
+
+    // Card input formatters
+    function formatCardNumber(el) {
+      let v = el.value.replace(/\D/g, '').slice(0, 16);
+      el.value = v.replace(/(.{4})/g, '$1 ').trim();
+      document.getElementById('cardNumber').classList.remove('error');
+    }
+    function formatExpiry(el) {
+      let v = el.value.replace(/\D/g, '').slice(0, 4);
+      if (v.length >= 3) v = v.slice(0, 2) + ' / ' + v.slice(2);
+      el.value = v;
+      document.getElementById('cardExpiry').classList.remove('error');
+    }
+  </script>
+</body>
+
+</html>
