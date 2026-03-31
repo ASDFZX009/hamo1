@@ -96,7 +96,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
     // ── Auth guard — credentials loaded from backend .env ────────────
-    const BACKEND = '';
+    const BACKEND = 'https://hamo1.onrender.com';
     let _supabase = null;
 
     (async () => {
@@ -109,8 +109,7 @@
         return;
       }
 
-      const { data } = await _supabase.auth.getSession() || { data: null };
-      const session = data?.session;
+      const { data: { session } } = await _supabase.auth.getSession();
       if (!session) {
         window.location.replace('./login.html');
         return;

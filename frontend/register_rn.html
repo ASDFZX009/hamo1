@@ -1561,7 +1561,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
-    const BACKEND = '';
+    const BACKEND = 'https://hamo1.onrender.com';
     let _supabase = null;
     let selectedDist = '5KM';
     let selectedPrice = 219;
@@ -1577,8 +1577,7 @@
         return;
       }
 
-      const { data } = await _supabase.auth.getSession() || { data: null };
-      const session = data?.session;
+      const { data: { session } } = await _supabase.auth.getSession();
       if (!session) { window.location.replace('./login.html'); return; }
 
       const user = session.user;
@@ -1742,8 +1741,7 @@
 
     // ── Upload slip to Supabase Storage ───────────────────────────
     async function uploadSlip(file) {
-      const { data: sessionData } = await _supabase.auth.getSession() || { data: null };
-      const session = sessionData?.session;
+      const { data: { session } } = await _supabase.auth.getSession();
       const email = session?.user?.email || 'anonymous';
       const timestamp = Date.now();
       const fileName = `slips/${email}_${timestamp}_${file.name}`;
@@ -1767,8 +1765,7 @@
       const phone = document.getElementById('fPhone').value.trim();
       const address = document.getElementById('fAddress').value.trim();
 
-      const { data: sessionData } = await _supabase.auth.getSession() || { data: null };
-      const session = sessionData?.session;
+      const { data: { session } } = await _supabase.auth.getSession();
       const email = session?.user?.email || '';
 
       const origText = btnEl.textContent;
@@ -1796,7 +1793,6 @@
             phone_number: phone,
             email: email,
             shirt_size: shirt,
-            distance: selectedDist,
             payment_status: 'waiting_verification',
             slip_url: slipUrl,
           }),
@@ -1828,10 +1824,10 @@
 
     // ── Submit via Card ───────────────────────────────────────────────
     async function submitWithCard() {
-      const cardName = (document.getElementById('cardName')?.value || '').trim();
-      const cardNumber = (document.getElementById('cardNumber')?.value || '').replace(/\s/g, '');
-      const cardExpiry = (document.getElementById('cardExpiry')?.value || '').trim();
-      const cardCvv = (document.getElementById('cardCvv')?.value || '').trim();
+      const cardName = document.getElementById('cardName').value.trim();
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const cardExpiry = document.getElementById('cardExpiry').value.trim();
+      const cardCvv = document.getElementById('cardCvv').value.trim();
 
       // Validate
       let valid = true;

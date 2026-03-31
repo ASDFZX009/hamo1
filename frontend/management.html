@@ -797,7 +797,6 @@
               <th onclick="sortTable('email')">อีเมล</th>
               <th onclick="sortTable('phone_number')">เบอร์โทร</th>
               <th onclick="sortTable('shirt_size')">ไซส์เสื้อ</th>
-              <th onclick="sortTable('distance')">ระยะทาง</th>
               <th onclick="sortTable('payment_status')">สถานะการชำระเงิน</th>
               <th onclick="sortTable('created_at')">วันที่สมัคร</th>
               <th>สลิปโอนเงิน</th>
@@ -806,7 +805,7 @@
           </thead>
           <tbody id="tableBody">
             <tr>
-              <td colspan="10" class="no-data">กำลังโหลดข้อมูล...</td>
+              <td colspan="9" class="no-data">กำลังโหลดข้อมูล...</td>
             </tr>
           </tbody>
         </table>
@@ -816,7 +815,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
-    const BACKEND = '';
+    const BACKEND = 'https://hamo1.onrender.com';
     let _supabase = null;
     function getRole() { return sessionStorage.getItem('hamo_role') || 'user'; }
     function apiHeaders() { return { 'Content-Type': 'application/json', 'X-Role': getRole() }; }
@@ -834,8 +833,7 @@
         _supabase = window.supabase.createClient(config.supabaseUrl, config.supabaseKey);
       } catch { window.location.replace('./login.html'); return; }
 
-      const { data } = await _supabase.auth.getSession() || { data: null };
-      const session = data?.session;
+      const { data: { session } } = await _supabase.auth.getSession();
       if (!session) { window.location.replace('./login.html'); return; }
 
       // ── Guard: เฉพาะ admin เท่านั้น ──────────────────────────────
@@ -919,8 +917,7 @@
         const matchSearch = !q ||
           (u.fullname || '').toLowerCase().includes(q) ||
           (u.email || '').toLowerCase().includes(q) ||
-          (u.phone_number || '').toLowerCase().includes(q) ||
-          (u.distance || '').toLowerCase().includes(q);
+          (u.phone_number || '').toLowerCase().includes(q);
         return matchStatus && matchSearch;
       });
       sortData();
@@ -934,7 +931,7 @@
       document.querySelectorAll('thead th').forEach(th => {
         th.classList.remove('sort-asc', 'sort-desc');
       });
-      const thIndex = ['index', 'fullname', 'email', 'phone_number', 'shirt_size', 'distance', 'payment_status', 'created_at'];
+      const thIndex = ['index', 'fullname', 'email', 'phone_number', 'shirt_size', 'payment_status', 'created_at'];
       const idx = thIndex.indexOf(key);
       if (idx >= 0) {
         const ths = document.querySelectorAll('thead th');
@@ -962,7 +959,7 @@
       document.getElementById('tableCount').textContent = `แสดง ${filtered.length} จาก ${allUsers.length} รายการ`;
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" class="no-data">ไม่พบข้อมูล</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="no-data">ไม่พบข้อมูล</td></tr>`;
         return;
       }
 
@@ -983,10 +980,6 @@
         const slipHtml = u.slip_url
           ? `<img class="slip-thumb" src="${u.slip_url}" alt="slip" onclick="openLightbox('${u.slip_url}')" />`
           : `<span class="no-slip">—</span>`;
-
-        // Distance badge
-        const distanceClass = u.distance === '15KM' ? 'status-paid' : u.distance === '10KM' ? 'status-pending' : 'status-failed';
-        const distanceLabel = u.distance || '5KM';
 
         // Action buttons for waiting_verification status (only show when slip is attached)
         let actionBtns = '—';
@@ -1009,7 +1002,6 @@
           <td class="cell-email">${u.email || '—'}</td>
           <td class="cell-phone">${u.phone_number || '—'}</td>
           <td><span class="shirt-badge">${u.shirt_size || '—'}</span></td>
-          <td><span class="shirt-badge">${distanceLabel}</span></td>
           <td><span class="status-badge ${statusClass}">${statusIcon} ${statusLabel}</span></td>
           <td class="cell-date">${date}</td>
           <td>${slipHtml}</td>
@@ -1072,14 +1064,13 @@
 
     // ── Export CSV ────────────────────────────────────────────────────
     function exportCSV() {
-      const headers = ['#', 'ชื่อ-นามสกุล', 'อีเมล', 'เบอร์โทร', 'ไซส์เสื้อ', 'ระยะทาง', 'สถานะ', 'วันที่สมัคร'];
+      const headers = ['#', 'ชื่อ-นามสกุล', 'อีเมล', 'เบอร์โทร', 'ไซส์เสื้อ', 'สถานะ', 'วันที่สมัคร'];
       const rows = filtered.map((u, i) => [
         allUsers.indexOf(u) + 1,
         u.fullname || '',
         u.email || '',
         u.phone_number || '',
         u.shirt_size || '',
-        u.distance || '',
         u.payment_status || '',
         u.created_at ? new Date(u.created_at).toLocaleDateString('th-TH') : '',
       ]);

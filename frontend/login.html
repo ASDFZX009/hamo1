@@ -505,7 +505,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
-    const BACKEND = '';
+    const BACKEND = 'https://hamo1.onrender.com';
     // ADMIN_CODE ถูกย้ายไป validate ที่ backend แล้ว (ไม่เก็บใน JS)
     let _supabase = null;
     let selectedRole = 'user';
@@ -530,8 +530,7 @@
           }
         });
 
-        const { data } = await _supabase.auth.getSession() || { data: null };
-        const session = data?.session;
+        const { data: { session } } = await _supabase.auth.getSession();
         if (session) { window.location.replace('./dashboard.html'); return; }
 
         updateUI();
@@ -631,14 +630,9 @@
 
       sessionStorage.setItem('hamo_role', selectedRole);
 
-      const currentUrl = window.location.href || '';
-      const redirectTo = currentUrl.includes('login.html')
-        ? currentUrl.replace('login.html', 'dashboard.html')
-        : (currentUrl.endsWith('/') ? currentUrl + 'dashboard.html' : currentUrl + '/dashboard.html');
-
       const { error } = await _supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: redirectTo },
+        options: { redirectTo: window.location.href.replace('login.html', 'dashboard.html') },
       });
 
       if (error) {
