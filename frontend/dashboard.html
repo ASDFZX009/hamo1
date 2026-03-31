@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Hamo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #181818;
+      --card: #1e1e1e;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.5);
+      --pink: #e040fb;
+      --pink2: #ce93d8;
+      --blue: #42a5f5;
+      --gold: #ffd54f;
+    }
+
+    html,
+    body {
+      min-height: 100vh;
+      font-family: 'Kanit', 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.12;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: #e040fb;
+      top: -200px;
+      left: -200px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: #42a5f5;
+      bottom: -150px;
+      right: -150px;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: #26c6da;
+      top: 40%;
+      left: 40%;
+      animation-delay: -9s;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate(0, 0) scale(1);
+      }
+
+      to {
+        transform: translate(50px, 40px) scale(1.1);
+      }
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(13, 13, 13, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--pink);
+      overflow: hidden;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--pink);
+      box-shadow: 0 0 12px rgba(224, 64, 251, 0.4);
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 8px 18px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+      box-shadow: 0 0 14px rgba(224, 64, 251, 0.25);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 72px 24px 56px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(224, 64, 251, 0.12);
+      border: 1px solid rgba(224, 64, 251, 0.3);
+      border-radius: 999px;
+      padding: 5px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--pink2);
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 0 0 8px var(--pink);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(42px, 8vw, 80px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 30%, var(--pink2) 70%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 52px;
+    }
+
+    .packages-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media(max-width:640px) {
+      .packages-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 48px 16px 40px;
+      }
+
+      header {
+        padding: 14px 16px;
+      }
+    }
+
+    .pkg-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 20px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pkg-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: inherit;
+    }
+
+    .pkg-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .pkg-card.rn {
+      --c: #42a5f5;
+      --c2: #1565c0;
+    }
+
+    .pkg-card.rn::before {
+      background: linear-gradient(135deg, rgba(66, 165, 245, 0.08), transparent);
+    }
+
+    .pkg-card.rn:hover {
+      border-color: #42a5f5;
+      box-shadow: 0 12px 40px rgba(66, 165, 245, 0.2);
+    }
+
+    .pkg-card.rn:hover::before {
+      opacity: 1;
+    }
+
+    .pkg-card.tr {
+      --c: #e040fb;
+      --c2: #7b1fa2;
+    }
+
+    .pkg-card.tr::before {
+      background: linear-gradient(135deg, rgba(224, 64, 251, 0.1), transparent);
+    }
+
+    .pkg-card.tr:hover {
+      border-color: #e040fb;
+      box-shadow: 0 12px 40px rgba(224, 64, 251, 0.25);
+    }
+
+    .pkg-card.tr:hover::before {
+      opacity: 1;
+    }
+
+    .pkg-card.trn {
+      --c: #ffd54f;
+      --c2: #e65100;
+    }
+
+    .pkg-card.trn::before {
+      background: linear-gradient(135deg, rgba(255, 213, 79, 0.1), transparent);
+    }
+
+    .pkg-card.trn:hover {
+      border-color: #ffd54f;
+      box-shadow: 0 12px 40px rgba(255, 213, 79, 0.2);
+    }
+
+    .pkg-card.trn:hover::before {
+      opacity: 1;
+    }
+
+    .pkg-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--c), var(--c2));
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .pkg-name {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      color: var(--c);
+    }
+
+    .pkg-desc {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      min-height: 40px;
+    }
+
+    .pkg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--c), var(--c2));
+      border: none;
+      border-radius: 12px;
+      padding: 10px 24px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+
+    .pkg-btn:hover {
+      opacity: 0.88;
+      transform: scale(1.02);
+    }
+
+    .pkg-btn:active {
+      transform: scale(0.98);
+    }
+
+    .popular-tag {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .stats-strip {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 48px;
+    }
+
+    .stat-item {
+      flex: 1;
+      background: var(--surface);
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--pink2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.4s;
+    }
+
+    .auth-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--pink);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      box-shadow: 0 0 20px rgba(224, 64, 251, 0.3);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .fade-in:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .fade-in:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .fade-in:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── User Dropdown ── */
+    .user-menu {
+      position: relative;
+    }
+
+    .user-trigger {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 12px;
+      transition: background 0.2s;
+      border: 1.5px solid transparent;
+    }
+
+    .user-trigger:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border);
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 8px;
+      min-width: 200px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+    }
+
+    .user-dropdown.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .dropdown-header {
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      margin-bottom: 6px;
+    }
+
+    .dropdown-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .dropdown-email {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.15s;
+      color: rgba(255, 255, 255, 0.85);
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-family: 'Kanit', sans-serif;
+      text-align: left;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .dropdown-item.organizer {
+      color: var(--pink2);
+    }
+
+    .dropdown-item.organizer:hover {
+      background: rgba(206, 147, 216, 0.1);
+    }
+
+    .dropdown-item.danger {
+      color: #ef5350;
+    }
+
+    .dropdown-item.danger:hover {
+      background: rgba(239, 83, 80, 0.1);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.07);
+      margin: 6px 0;
+    }
+
+    .organizer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(224, 64, 251, 0.15);
+      border: 1px solid rgba(224, 64, 251, 0.3);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--pink2);
+      margin-left: 6px;
+    }
+
+    /* ── Role badge ── */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .role-badge.user {
+      background: rgba(66, 165, 245, 0.12);
+      border: 1px solid rgba(66, 165, 245, 0.3);
+      color: var(--blue);
+    }
+
+    .role-badge.admin {
+      background: rgba(224, 64, 251, 0.12);
+      border: 1px solid rgba(224, 64, 251, 0.3);
+      color: var(--pink2);
+    }
+
+    /* ── User personal card ── */
+    .my-reg-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px 28px;
+      margin-top: 32px;
+    }
+
+    .my-reg-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
+    .my-reg-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .my-reg-row:last-child {
+      border-bottom: none;
+    }
+
+    .my-reg-label {
+      color: var(--muted);
+    }
+
+    .my-reg-value {
+      font-weight: 600;
+    }
+
+    .no-reg {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    /* ── Admin stats extra ── */
+    .admin-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .admin-action-btn {
+      flex: 1;
+      min-width: 160px;
+      padding: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+      cursor: pointer;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.2s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-action-btn:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+      background: rgba(224, 64, 251, 0.05);
+    }
+
+    .admin-action-btn .action-icon {
+      font-size: 24px;
+    }
+
+    .admin-action-btn .action-label {
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="auth-overlay" id="authOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="bg-mesh">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🧢</div>
+      Hamo
+    </div>
+    <div class="header-right">
+      <span class="role-badge user" id="roleBadge">👤 User</span>
+      <div class="user-menu" id="userMenu">
+        <div class="user-trigger" onclick="toggleDropdown()">
+          <div class="avatar-wrap" id="avatarEl">?</div>
+          <span class="user-name" id="userNameEl"></span>
+          <span style="color:var(--muted);font-size:12px;">▾</span>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-name" id="dropdownName">—</div>
+            <div class="dropdown-email" id="dropdownEmail">—</div>
+          </div>
+          <button class="dropdown-item organizer" id="menuManagement" onclick="goToManagement()" style="display:none;">
+            🗂️ จัดการการสมัคร
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item danger" id="logoutBtn">🚪 ออกจากระบบ</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        เปิดรับสมัครแล้ว
+      </div>
+
+      <h1 class="hero-title">TalesRunNer</h1>
+      <p class="hero-sub">ประตูสู่ Tales Runner เปิดแล้ว! วิ่งพร้อมกันทั่วประเทศ!</p>
+      <p class="hero-desc">วิ่งไปกับเพื่อนรู้ใจ สมัครเลยตอนนี้</p>
+
+      <div class="packages-label">เลือก Package ของคุณ</div>
+
+      <div class="packages-grid">
+        <div class="pkg-card rn fade-in" onclick="selectPackage('RN')">
+          <div class="pkg-badge">🏃</div>
+          <div class="pkg-name">RN</div>
+          <div class="pkg-desc">Run Normal<br />สำหรับนักวิ่งทั่วไป</div>
+          <button class="pkg-btn">สมัครเลย →</button>
+        </div>
+
+        <div class="pkg-card tr fade-in" onclick="selectPackage('TR')">
+          <div class="popular-tag">⭐ Popular</div>
+          <div class="pkg-badge">🎮</div>
+          <div class="pkg-name">TR</div>
+          <div class="pkg-desc">Tales Runner<br />แพ็กเกจมาตรฐาน</div>
+          <button class="pkg-btn">สมัครเลย →</button>
+        </div>
+
+        <div class="pkg-card trn fade-in" onclick="selectPackage('TRN')">
+          <div class="pkg-badge">👑</div>
+          <div class="pkg-name">TRN</div>
+          <div class="pkg-desc">Tales Runner Night<br />แพ็กเกจพรีเมียม</div>
+          <button class="pkg-btn">สมัครเลย →</button>
+        </div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-item">
+          <div class="stat-num" id="statUsers">—</div>
+          <div class="stat-label">ผู้สมัครทั้งหมด</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="statPaid">—</div>
+          <div class="stat-label">ชำระเงินแล้ว ✅</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="statPending">—</div>
+          <div class="stat-label">รอชำระ ⏳</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Package</div>
+        </div>
+      </div>
+
+      <!-- User: my registration card -->
+      <div class="my-reg-card" id="myRegCard" style="display:none;">
+        <div class="my-reg-title">📋 ข้อมูลการสมัครของฉัน</div>
+        <div id="myRegContent">
+          <div class="no-reg">กำลังโหลด...</div>
+        </div>
+      </div>
+
+      <!-- Admin: quick action buttons -->
+      <div class="admin-actions" id="adminActions" style="display:none;">
+        <button class="admin-action-btn" onclick="goToManagement()">
+          <span class="action-icon">🗂️</span>
+          <span class="action-label">จัดการการสมัคร</span>
+        </button>
+        <button class="admin-action-btn" onclick="window.location.href='./management.html'">
+          <span class="action-icon">👥</span>
+          <span class="action-label">ดูข้อมูลผู้สมัครทั้งหมด</span>
+        </button>
+      </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const BACKEND = '';
+    let _supabase = null;
+    let userRole = 'user'; // 'user' | 'admin'
+    let userEmail = '';
+
+    // ── Helpers ───────────────────────────────────────────────────────
+    function getRole() {
+      return sessionStorage.getItem('hamo_role') || 'user';
+    }
+    function apiHeaders() {
+      return { 'Content-Type': 'application/json', 'X-Role': getRole() };
+    }
+
+    // ── Boot ──────────────────────────────────────────────────────────
+    (async () => {
+      try {
+        const res = await fetch(`${BACKEND}/api/config`);
+        const config = await res.json();
+        _supabase = window.supabase.createClient(config.supabaseUrl, config.supabaseKey);
+      } catch { window.location.replace('./login.html'); return; }
+
+      const { data } = await _supabase.auth.getSession() || { data: null };
+      const session = data?.session;
+      if (!session) { window.location.replace('./login.html'); return; }
+
+      userRole = getRole();
+      const user = session.user;
+      userEmail = user.email || '';
+      const displayName = user.user_metadata?.full_name || userEmail || 'User';
+
+      // Header
+      document.getElementById('userNameEl').textContent = displayName;
+      document.getElementById('dropdownName').textContent = displayName;
+      document.getElementById('dropdownEmail').textContent = userEmail;
+
+      // Role badge
+      const badge = document.getElementById('roleBadge');
+      if (userRole === 'admin') {
+        badge.textContent = '🛡️ Admin';
+        badge.className = 'role-badge admin';
+        document.getElementById('menuManagement').style.display = 'flex';
+        document.getElementById('adminActions').style.display = 'flex';
+      } else {
+        badge.textContent = '👤 User';
+        badge.className = 'role-badge user';
+        document.getElementById('myRegCard').style.display = 'block';
+      }
+
+      // Avatar
+      const avatarEl = document.getElementById('avatarEl');
+      const avatarUrl = user.user_metadata?.avatar_url;
+      if (avatarUrl) {
+        avatarEl.innerHTML = `<img src="${avatarUrl}" alt="av" onerror="this.parentElement.textContent='${displayName[0].toUpperCase()}'" />`;
+      } else {
+        avatarEl.textContent = displayName[0].toUpperCase();
+      }
+
+      document.getElementById('logoutBtn').onclick = async () => {
+        sessionStorage.removeItem('hamo_role');
+        await _supabase.auth.signOut();
+        window.location.replace('./login.html');
+      };
+
+      // Load data by role
+      if (userRole === 'admin') {
+        await loadAdminStats();
+      } else {
+        await loadMyRegistration();
+      }
+
+      const overlay = document.getElementById('authOverlay');
+      overlay.classList.add('hidden');
+      setTimeout(() => overlay.remove(), 400);
+    })();
+
+    // ── Admin: load stats ─────────────────────────────────────────────
+    async function loadAdminStats() {
+      try {
+        const res = await fetch(`${BACKEND}/api/users`, { headers: apiHeaders() });
+        if (res.status === 403) return;
+        const users = await res.json();
+        if (Array.isArray(users)) {
+          const paid = users.filter(u => u.payment_status === 'paid').length;
+          const waiting = users.filter(u => u.payment_status === 'waiting_verification').length;
+          const pending = users.filter(u => u.payment_status === 'pending').length;
+          document.getElementById('statUsers').textContent = users.length;
+          document.getElementById('statPaid').textContent = paid;
+          document.getElementById('statPending').textContent = waiting + pending;
+        }
+      } catch { /* ignore */ }
+    }
+
+    // ── User: load my registration ────────────────────────────────────
+    async function loadMyRegistration() {
+      try {
+        const res = await fetch(`${BACKEND}/api/users/me?email=${encodeURIComponent(userEmail)}`);
+        const data = await res.json();
+        const content = document.getElementById('myRegContent');
+        if (!Array.isArray(data) || data.length === 0) {
+          content.innerHTML = `<div class="no-reg">ยังไม่มีข้อมูลการสมัคร — เลือก Package ด้านล่างเพื่อสมัครได้เลย 👇</div>`;
+          return;
+        }
+        const u = data[0];
+        const statusClass = u.payment_status === 'paid' ? 'color:#69f0ae' :
+          u.payment_status === 'waiting_verification' ? 'color:#ffd54f' :
+            u.payment_status === 'pending' ? 'color:#ffd54f' : 'color:#ef5350';
+        const statusLabel = u.payment_status === 'paid' ? '✅ ชำระแล้ว' :
+          (u.payment_status === 'waiting_verification' || u.payment_status === 'pending') ? '⏳ รอชำระ' : '❌ ล้มเหลว';
+        const statusNote = u.payment_status === 'waiting_verification' ? '<br/><span style="font-size:11px;color:#9e9e9e;">รอตรวจสอบสลิปโดย Admin</span>' : '';
+        content.innerHTML = `
+          <div class="my-reg-row"><span class="my-reg-label">ชื่อ</span><span class="my-reg-value">${u.fullname}</span></div>
+          <div class="my-reg-row"><span class="my-reg-label">อีเมล</span><span class="my-reg-value" style="font-size:13px;">${u.email}</span></div>
+          <div class="my-reg-row"><span class="my-reg-label">เบอร์โทร</span><span class="my-reg-value">${u.phone_number}</span></div>
+          <div class="my-reg-row"><span class="my-reg-label">ไซส์เสื้อ</span><span class="my-reg-value">${u.shirt_size}</span></div>
+          <div class="my-reg-row"><span class="my-reg-label">สถานะชำระเงิน</span><span class="my-reg-value" style="${statusClass}">${statusLabel}</span></div>
+          ${u.payment_status === 'waiting_verification' ? '<div class="my-reg-row" style="color:#ce93d8;"><span class="my-reg-label">หมายเหตุ</span><span class="my-reg-value" style="font-size:12px;">รอ Admin ยืนยันการชำระเงิน</span></div>' : ''}
+        `;
+        // Hide packages if already registered
+        const hero = document.querySelector('.packages-grid');
+        if (hero && (u.payment_status === 'paid' || u.payment_status === 'waiting_verification')) {
+          hero.style.opacity = '0.4';
+          hero.style.pointerEvents = 'none';
+        }
+      } catch { /* ignore */ }
+    }
+
+    // ── Dropdown ──────────────────────────────────────────────────────
+    function toggleDropdown() {
+      document.getElementById('userDropdown').classList.toggle('open');
+    }
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('userMenu');
+      if (menu && !menu.contains(e.target)) {
+        document.getElementById('userDropdown').classList.remove('open');
+      }
+    });
+    function goToManagement() {
+      document.getElementById('userDropdown').classList.remove('open');
+      window.location.href = './management.html';
+    }
+
+    // ── Package select ────────────────────────────────────────────────
+    function selectPackage(pkg) {
+      if (pkg === 'RN') { window.location.href = './register_rn.html'; return; }
+      console.log('TODO package:', pkg);
+    }
+  </script>
+</body>
+
+</html>
